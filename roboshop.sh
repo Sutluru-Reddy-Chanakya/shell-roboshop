@@ -16,23 +16,23 @@ do
     --query 'Instances[0].InstanceId' \
     --output text )
     echo "Launched instance $instance with ID $INSTANCE_ID"
-done
-
-if [ $instance == "frontend" ]; then
-    IP=$(
-        aws ec2 describe-instances \
-        --instance-ids $INSTANCE_ID \
-        --query 'Reservations[].Instances[].PublicIpAddress' \
-        --output text
-    )
     
-else
-    IP=$(
-        aws ec2 describe-instances \
-        --instance-ids $INSTANCE_ID \
-        --query 'Reservations[].Instances[].PrivateIpAddress' \
-        --output text
-    )
-fi  
-
-echo "IP Address: $IP"
+    if [ "$instance" == "frontend" ]; then
+        IP=$(
+            aws ec2 describe-instances \
+            --instance-ids $INSTANCE_ID \
+            --query 'Reservations[].Instances[].PublicIpAddress' \
+            --output text
+        )
+    else
+        IP=$(
+            aws ec2 describe-instances \
+            --instance-ids $INSTANCE_ID \
+            --query 'Reservations[].Instances[].PrivateIpAddress' \
+            --output text
+        )
+    fi  
+    
+    echo "IP Address: $IP"
+    echo "==========================="
+done
