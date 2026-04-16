@@ -10,7 +10,6 @@ do
     --instance-type "t3.micro" \
     --security-group-ids $SG_ID \
     --subnet-id $SUBNET_ID \
-
     --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$instance}]" \
     --query 'Instances[0].InstanceId' \
     --output text )
@@ -18,19 +17,20 @@ do
 done
 
 if [ $instance == "frontend" ]; then
-        IP=$(
-            aws ec2 describe-instances \
-            --instance-ids $INSTANCE_ID \
-            --query 'Reservations[].Instances[].PublicIpAddress' \
-            --output text
-        )
-        RECORD_NAME="$DOMAIN_NAME" # daws88s.online
-    else
-        IP=$(
-            aws ec2 describe-instances \
-            --instance-ids $INSTANCE_ID \
-            --query 'Reservations[].Instances[].PrivateIpAddress' \
-            --output text
-        )
+    IP=$(
+        aws ec2 describe-instances \
+        --instance-ids $INSTANCE_ID \
+        --query 'Reservations[].Instances[].PublicIpAddress' \
+        --output text
+    )
+    RECORD_NAME="$DOMAIN_NAME" # daws88s.online
+else
+    IP=$(
+        aws ec2 describe-instances \
+        --instance-ids $INSTANCE_ID \
+        --query 'Reservations[].Instances[].PrivateIpAddress' \
+        --output text
+    )
+fi  
 
-          echo "IP Address: $IP"
+echo "IP Address: $IP"
